@@ -1,0 +1,36 @@
+{
+  "name": "giuffre/sprint",
+  "description": "sprintf with named parameters",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Giuffre\\Sprint\\": "src/"
+    },
+    "files": [
+      "src/Resources/functions/sprint.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=7.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.3",
+    "phpunit/phpunit": "^6.0",
+    "facile-it/moka": "^2.0",
+    "facile-it/paraunit": "^0.9",
+    "symfony/var-dumper": "^3.3"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Angelo Giuffredi",
+      "email": "agiuffredi@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable"
+}
