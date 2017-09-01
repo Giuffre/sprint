@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: angelogiuffredi
- * Date: 01/09/2017
- * Time: 12:53
- */
+declare(strict_types=1);
 
 namespace Giuffre\Sprint;
 

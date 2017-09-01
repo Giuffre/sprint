@@ -1,10 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: angelogiuffredi
- * Date: 01/09/2017
- * Time: 12:40
- */
+
+declare(strict_types=1);
 
 namespace Tests;
 
@@ -13,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class Test extends TestCase
 {
-
     public function testSprint()
     {
         $result = Sprint::sprint(
