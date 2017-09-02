@@ -7,7 +7,7 @@ namespace Tests;
 use Giuffre\Sprint\Sprint;
 use PHPUnit\Framework\TestCase;
 
-class Test extends TestCase
+class SprintTest extends TestCase
 {
     public function testSprint()
     {

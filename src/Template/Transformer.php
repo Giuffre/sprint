@@ -32,10 +32,10 @@ class Transformer
 
     /**
      * Transformer constructor.
-     * @param string $originalTemplate
+     * @param Template $originalTemplate
      * @param NamedValues $namedValues
      */
-    public function __construct(string $originalTemplate, NamedValues $namedValues)
+    public function __construct(Template $originalTemplate, NamedValues $namedValues)
     {
         $this->originalTemplate = $originalTemplate;
         $this->namedValues = $namedValues;
@@ -49,11 +49,11 @@ class Transformer
     public function transform(): TransformedObject
     {
         $namedParameters = [];
-        $template = $this->originalTemplate;
+        $template = (string)$this->originalTemplate;
         preg_match_all($this->pattern, $template, $namedParameters);
 
         $namedParameters = $namedParameters[0];
-        if (true === self::hasDupes($namedParameters)) {
+        if (true === $this->hasDupes($namedParameters)) {
             throw new DuplicateParametersFound('Named parameters must be occur at most once');
         }
 
@@ -63,20 +63,17 @@ class Transformer
 
         $values = [];
         foreach ($namedParameters as $match) {
-            $values[] = self::getValue(
-                $this->namedValues,
-                self::getName($match)
-            );
+            $values[] = $this->getValue($this->extractName($match));
 
             $template = str_replace(
                 $match,
-                self::getType($match),
+                $this->extractType($match),
                 $template
             );
         }
 
         return new TransformedObject(
-            $template,
+            new Template($template),
             $values
         );
     }
@@ -85,19 +82,18 @@ class Transformer
      * @param array $array
      * @return bool
      */
-    private static function hasDupes(array $array): bool
+    private function hasDupes(array $array): bool
     {
         return !(count($array) === count(array_unique($array)));
     }
 
     /**
-     * @param NamedValues $namedValues
      * @param string $name
      * @return mixed
      */
-    private static function getValue(NamedValues $namedValues, string $name)
+    private function getValue(string $name)
     {
-        return $namedValues[$name];
+        return $this->namedValues[$name];
     }
 
     /**
@@ -105,7 +101,7 @@ class Transformer
      * @return string
      * @throws MalformedName
      */
-    private static function getName(string $fromMatch): string
+    private function extractName(string $fromMatch): string
     {
         $matches = [];
         preg_match('/\[(\w+)\]/', $fromMatch, $matches);
@@ -123,7 +119,7 @@ class Transformer
      * @return string
      * @throws MalformedType
      */
-    private static function getType(string $fromMatch): string
+    private function extractType(string $fromMatch): string
     {
         $matches = [];
         preg_match('/(%)([\w]+)/', $fromMatch, $matches);

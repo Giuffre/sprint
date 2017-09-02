@@ -6,6 +6,7 @@ namespace Giuffre\Sprint;
 use Giuffre\Sprint\Error\DuplicateParametersFound;
 use Giuffre\Sprint\Error\NamedParametersMismatch;
 use Giuffre\Sprint\Template\NamedValues;
+use Giuffre\Sprint\Template\Template;
 use Giuffre\Sprint\Template\Transformer;
 
 /**
@@ -24,12 +25,12 @@ class Sprint
     public static function sprint(string $template, array ...$namedValues): string
     {
         $transformedObject = (new Transformer(
-            $template,
+            new Template($template),
             new NamedValues($namedValues)
         ))->transform();
 
         return sprintf(
-            $transformedObject->getTemplate(),
+            (string)$transformedObject->getTemplate(),
             ...$transformedObject->getValues()
         );
     }

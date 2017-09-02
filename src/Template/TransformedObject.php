@@ -11,7 +11,7 @@ namespace Giuffre\Sprint\Template;
 class TransformedObject
 {
     /**
-     * @var string
+     * @var Template
      */
     private $template;
 
@@ -22,19 +22,19 @@ class TransformedObject
 
     /**
      * TransformedObject constructor.
-     * @param string $template
+     * @param Template $template
      * @param array|mixed[] $values
      */
-    public function __construct(string $template, array $values)
+    public function __construct(Template $template, array $values)
     {
         $this->template = $template;
         $this->values = $values;
     }
 
     /**
-     * @return string
+     * @return Template
      */
-    public function getTemplate(): string
+    public function getTemplate(): Template
     {
         return $this->template;
     }
