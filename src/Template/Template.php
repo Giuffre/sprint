@@ -1,14 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: angelogiuffredi
- * Date: 9/2/17
- * Time: 3:57 PM
- */
+declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
 
+/**
+ * Class Template
+ * @package Giuffre\Sprint\Template
+ */
 class Template
 {
     /**
@@ -25,6 +24,9 @@ class Template
         $this->originalTemplate = $originalTemplate;
     }
 
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->originalTemplate;

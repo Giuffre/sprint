@@ -13,7 +13,7 @@ use Giuffre\Sprint\Error\NamedParametersMismatch;
  * Class Transformer
  * @package Giuffre\Sprint\Template
  */
-class Transformer
+class Transformer implements TransformerInterface
 {
     /**
      * @var string
@@ -35,7 +35,10 @@ class Transformer
      * @param Template $originalTemplate
      * @param NamedValues $namedValues
      */
-    public function __construct(Template $originalTemplate, NamedValues $namedValues)
+    public function __construct(
+        Template $originalTemplate,
+        NamedValues $namedValues
+    )
     {
         $this->originalTemplate = $originalTemplate;
         $this->namedValues = $namedValues;
@@ -52,8 +55,8 @@ class Transformer
         $template = (string)$this->originalTemplate;
         preg_match_all($this->pattern, $template, $namedParameters);
 
-        $namedParameters = $namedParameters[0];
-        if (true === $this->hasDupes($namedParameters)) {
+        $namedParameters = new NamedParameters($namedParameters[0]);
+        if ($namedParameters->hasDupes()) {
             throw new DuplicateParametersFound('Named parameters must be occur at most once');
         }
 
@@ -63,11 +66,11 @@ class Transformer
 
         $values = [];
         foreach ($namedParameters as $match) {
-            $values[] = $this->getValue($this->extractName($match));
+            $values[] = $this->getValue($match->extractName());
 
             $template = str_replace(
-                $match,
-                $this->extractType($match),
+                (string)$match,
+                $match->extractType(),
                 $template
             );
         }
@@ -79,56 +82,11 @@ class Transformer
     }
 
     /**
-     * @param array $array
-     * @return bool
-     */
-    private function hasDupes(array $array): bool
-    {
-        return !(count($array) === count(array_unique($array)));
-    }
-
-    /**
      * @param string $name
      * @return mixed
      */
     private function getValue(string $name)
     {
         return $this->namedValues[$name];
-    }
-
-    /**
-     * @param string $fromMatch
-     * @return string
-     * @throws MalformedName
-     */
-    private function extractName(string $fromMatch): string
-    {
-        $matches = [];
-        preg_match('/\[(\w+)\]/', $fromMatch, $matches);
-        if (!array_key_exists(1, $matches) || 0 >= count($matches)) {
-            throw new MalformedName(
-                sprintf('Could not extract a name from this string: %s', $fromMatch)
-            );
-        }
-
-        return $matches[1];
-    }
-
-    /**
-     * @param string $fromMatch
-     * @return string
-     * @throws MalformedType
-     */
-    private function extractType(string $fromMatch): string
-    {
-        $matches = [];
-        preg_match('/(%)([\w]+)/', $fromMatch, $matches);
-        if (!array_key_exists(0, $matches) || 0 >= count($matches)) {
-            throw new MalformedType(
-                sprintf('Could not extract a type from this string: %s', $fromMatch)
-            );
-        }
-
-        return $matches[0];
     }
 }
