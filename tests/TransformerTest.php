@@ -8,7 +8,6 @@
 
 namespace Tests\Transformer;
 
-
 use Giuffre\Sprint\Template\NamedValues;
 use Giuffre\Sprint\Template\Template;
 use Giuffre\Sprint\Template\Transformer;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
-
 use Giuffre\Sprint\Error\MalformedName;
 use Giuffre\Sprint\Error\MalformedType;
 

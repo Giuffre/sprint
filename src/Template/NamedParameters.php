@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
-
 /**
  * Class NamedParameters
  * @package Giuffre\Sprint\Template
@@ -37,5 +36,4 @@ class NamedParameters extends \ArrayObject
     {
         return !(count($this->namedParameters) === count(array_unique($this->namedParameters)));
     }
-
 }

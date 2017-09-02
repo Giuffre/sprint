@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Giuffre\Sprint\Template;
 
 use Giuffre\Sprint\Error\DuplicateParametersFound;
-use Giuffre\Sprint\Error\MalformedName;
-use Giuffre\Sprint\Error\MalformedType;
 use Giuffre\Sprint\Error\NamedParametersMismatch;
 
 /**
@@ -38,8 +36,7 @@ class Transformer implements TransformerInterface
     public function __construct(
         Template $originalTemplate,
         NamedValues $namedValues
-    )
-    {
+    ) {
         $this->originalTemplate = $originalTemplate;
         $this->namedValues = $namedValues;
     }

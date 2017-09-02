@@ -6,7 +6,6 @@ namespace Giuffre\Sprint\Template;
 use Giuffre\Sprint\Error\DuplicateParametersFound;
 use Giuffre\Sprint\Error\NamedParametersMismatch;
 
-
 /**
  * Interface TransformerInterface
  * @package Giuffre\Sprint\Template
