@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Giuffre\Sprint\Error\NamedParametersMismatch;
+use Giuffre\Sprint\Error\MissingValues;
 use Giuffre\Sprint\Sprint;
 use PHPUnit\Framework\TestCase;
 
@@ -92,7 +92,7 @@ class SprintTest extends TestCase
 
     public function testSprintWithMismatchedParameters()
     {
-        $this->expectException(NamedParametersMismatch::class);
+        $this->expectException(MissingValues::class);
 
         Sprint::sprint(
             'Le mele sono %s[come] e di colore %s[colore]',

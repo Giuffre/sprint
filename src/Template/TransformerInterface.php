@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
-use Giuffre\Sprint\Error\NamedParametersMismatch;
+use Giuffre\Sprint\Error\MissingValues;
 
 /**
  * Interface TransformerInterface
@@ -13,7 +13,7 @@ interface TransformerInterface
 {
     /**
      * @return TransformedObject
-     * @throws NamedParametersMismatch
+     * @throws MissingValues
      */
     public function transform(): TransformedObject;
 }
