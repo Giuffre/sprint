@@ -14,7 +14,7 @@ use Giuffre\Sprint\Error\MalformedType;
 class NamedParameter
 {
     const PATTERN_NAME = '/\[(\w+)\]/';
-    const PATTERN_TYPE = '/(%)([\w]+)/';
+    const PATTERN_TYPE = '/%[\w]+/';
 
     /**
      * @var string
