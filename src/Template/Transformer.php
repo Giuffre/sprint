@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
-use Giuffre\Sprint\Error\DuplicateParametersFound;
 use Giuffre\Sprint\Error\NamedParametersMismatch;
 
 /**
@@ -13,10 +11,7 @@ use Giuffre\Sprint\Error\NamedParametersMismatch;
  */
 class Transformer implements TransformerInterface
 {
-    /**
-     * @var string
-     */
-    private $pattern = '/(%)([\w]+)\[(\w+)\]/';
+    const PATTERN = '/%[\w]+\[\w+\]/';
 
     /**
      * @var NamedValues
@@ -43,21 +38,16 @@ class Transformer implements TransformerInterface
 
     /**
      * @return TransformedObject
-     * @throws DuplicateParametersFound
      * @throws NamedParametersMismatch
      */
     public function transform(): TransformedObject
     {
         $namedParameters = [];
         $template = (string)$this->originalTemplate;
-        preg_match_all($this->pattern, $template, $namedParameters);
+        preg_match_all(self::PATTERN, $template, $namedParameters);
 
         $namedParameters = new NamedParameters($namedParameters[0]);
-        if ($namedParameters->hasDupes()) {
-            throw new DuplicateParametersFound('Named parameters must be occur at most once');
-        }
-
-        if (count($namedParameters) !== count($this->namedValues)) {
+        if ($namedParameters->parameterCount() !== $this->namedValues->valueCount()) {
             throw new NamedParametersMismatch('Placeholders and values count must be the same');
         }
 

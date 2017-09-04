@@ -24,4 +24,12 @@ class NamedValues extends \ArrayObject
 
         parent::__construct($formattedNamedValues);
     }
+
+    /**
+     * @return int
+     */
+    public function valueCount(): int
+    {
+        return $this->count();
+    }
 }

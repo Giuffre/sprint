@@ -10,9 +10,9 @@ namespace Giuffre\Sprint\Template;
 class NamedParameters extends \ArrayObject
 {
     /**
-     * @var array
+     * @var NamedParameter[]
      */
-    private $namedParameters;
+    private $namedParameters = [];
 
     /**
      * NamedParameters constructor.
@@ -20,20 +20,22 @@ class NamedParameters extends \ArrayObject
      */
     public function __construct(array $namedParameters)
     {
-        $this->namedParameters = $namedParameters;
-        $input = [];
-        foreach ($this->namedParameters as $namedParameter) {
-            $input[] = new NamedParameter($namedParameter);
+        foreach ($namedParameters as $namedParameter) {
+            $this->namedParameters[] = new NamedParameter($namedParameter);
         }
 
-        parent::__construct($input);
+        parent::__construct($this->namedParameters);
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function hasDupes(): bool
+    public function parameterCount(): int
     {
-        return !(count($this->namedParameters) === count(array_unique($this->namedParameters)));
+        $names = array_map(function (NamedParameter $parameter) {
+            return $parameter->extractName();
+        }, $this->namedParameters);
+
+        return count(array_unique($names));
     }
 }
