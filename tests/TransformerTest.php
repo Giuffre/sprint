@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: angelogiuffredi
- * Date: 9/2/17
- * Time: 11:55 AM
- */
+declare(strict_types=1);
 
 namespace Tests\Transformer;
 
