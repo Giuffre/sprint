@@ -5,7 +5,7 @@ namespace Giuffre\Sprint\Error;
 
 class MissingValues extends \Error
 {
-    public static function forParameters(string ...$names)
+    public static function forParameters(string ...$names): self
     {
         $plural = count($names) === 1 ? '' : 's';
         $parameters = count($names) > 0

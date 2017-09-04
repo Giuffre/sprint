@@ -18,15 +18,15 @@ class NamedParameter
     /**
      * @var string
      */
-    private $fromMatch;
+    private $match;
 
     /**
      * NamedParameter constructor.
-     * @param string $fromMatch
+     * @param string $match
      */
-    public function __construct($fromMatch)
+    public function __construct($match)
     {
-        $this->fromMatch = $fromMatch;
+        $this->match = $match;
     }
 
     /**
@@ -36,11 +36,9 @@ class NamedParameter
     public function extractName(): string
     {
         $matches = [];
-        preg_match(self::PATTERN_NAME, $this->fromMatch, $matches);
+        preg_match(self::PATTERN_NAME, $this->match, $matches);
         if (!array_key_exists(1, $matches) || 0 >= count($matches)) {
-            throw new MalformedName(
-                sprintf('Cannot extract parameter name from match: %s', $this->fromMatch)
-            );
+            throw MalformedName::fromMatch($this->match);
         }
 
         return $matches[1];
@@ -53,11 +51,9 @@ class NamedParameter
     public function extractType(): string
     {
         $matches = [];
-        preg_match(self::PATTERN_TYPE, $this->fromMatch, $matches);
+        preg_match(self::PATTERN_TYPE, $this->match, $matches);
         if (!array_key_exists(0, $matches) || 0 >= count($matches)) {
-            throw new MalformedType(
-                sprintf('Cannot extract parameter type from match: %s', $this->fromMatch)
-            );
+            throw MalformedType::fromMatch($this->match);
         }
 
         return $matches[0];
@@ -68,6 +64,6 @@ class NamedParameter
      */
     public function __toString(): string
     {
-        return $this->fromMatch;
+        return $this->match;
     }
 }

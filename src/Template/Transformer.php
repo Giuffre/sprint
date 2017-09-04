@@ -31,8 +31,7 @@ class Transformer implements TransformerInterface
     public function __construct(
         Template $originalTemplate,
         NamedValues $namedValues
-    )
-    {
+    ) {
         $this->originalTemplate = $originalTemplate;
         $this->namedValues = $namedValues;
     }
