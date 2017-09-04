@@ -30,6 +30,10 @@
     {
       "name": "Angelo Giuffredi",
       "email": "agiuffredi@gmail.com"
+    },
+    {
+      "name": "Alberto Villa",
+      "email": "villa.alberto@gmail.com"
     }
   ],
   "minimum-stability": "stable"
