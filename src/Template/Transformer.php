@@ -50,11 +50,7 @@ class Transformer implements TransformerInterface
         preg_match_all(self::PATTERN, $template, $namedParameters);
 
         $namedParameters = new NamedParameters($namedParameters[0]);
-        if ($namedParameters->hasDupes()) {
-            throw new DuplicateParametersFound('Named parameters must be occur at most once');
-        }
-
-        if (count($namedParameters) !== count($this->namedValues)) {
+        if ($namedParameters->parameterCount() !== $this->namedValues->valueCount()) {
             throw new NamedParametersMismatch('Placeholders and values count must be the same');
         }
 

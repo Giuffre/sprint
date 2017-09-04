@@ -36,6 +36,32 @@ class SprintTest extends TestCase
         );
     }
 
+    public function testSprintWithRepeatedNamedParameters()
+    {
+        $result = Sprint::sprint(
+            '%s[disciplina] è grande, %s[disciplina] è forte',
+            ['disciplina' => 'Shaolin Kung Fu']
+        );
+
+        $this->assertEquals(
+            'Shaolin Kung Fu è grande, Shaolin Kung Fu è forte',
+            $result
+        );
+    }
+
+    public function testSprintWithRepeatedTypedNamedParameters()
+    {
+        $result = Sprint::sprint(
+            'Zero can be rendered as an integer (%d[number]) as well as a string ("%s[number]")',
+            ['number' => 0]
+        );
+
+        $this->assertEquals(
+            'Zero can be rendered as an integer (0) as well as a string ("0")',
+            $result
+        );
+    }
+
     public function testSprintWithOverriddenNamedValues()
     {
         $result = Sprint::sprint(
