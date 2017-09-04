@@ -13,7 +13,7 @@ use Giuffre\Sprint\Error\NamedParametersMismatch;
  */
 class Transformer implements TransformerInterface
 {
-    const PATTERN = '/(%)([\w]+)\[(\w+)\]/';
+    const PATTERN = '/%[\w]+\[\w+\]/';
 
     /**
      * @var NamedValues
