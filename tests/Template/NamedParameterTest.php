@@ -10,6 +10,10 @@ use PHPUnit\Framework\TestCase;
 
 class NamedParameterTest extends TestCase
 {
+    const TEMPLATE = '%s[%s]';
+    const NAME = 'foo';
+    const TYPE = '%s';
+
     /**
      * @var NamedParameter
      */
@@ -17,13 +21,15 @@ class NamedParameterTest extends TestCase
 
     protected function setUp()
     {
-        $this->parameter = new NamedParameter('%s[foo]');
+        $this->parameter = new NamedParameter(
+            sprintf(self::TEMPLATE, self::TYPE, self::NAME)
+        );
     }
 
     public function testExtractNameSuccess()
     {
         $this->assertEquals(
-            'foo',
+            self::NAME,
             $this->parameter->extractName()
         );
     }
@@ -39,7 +45,7 @@ class NamedParameterTest extends TestCase
     public function testExtractTypeSuccess()
     {
         $this->assertEquals(
-            '%s',
+            self::TYPE,
             $this->parameter->extractType()
         );
     }
@@ -50,5 +56,13 @@ class NamedParameterTest extends TestCase
 
         $this->expectException(MalformedType::class);
         $parameter->extractType();
+    }
+
+    public function testToString()
+    {
+        $this->assertEquals(
+            sprintf(self::TEMPLATE, self::TYPE, self::NAME),
+            (string)$this->parameter
+        );
     }
 }
