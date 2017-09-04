@@ -24,7 +24,7 @@ class NamedParameter
      * NamedParameter constructor.
      * @param string $match
      */
-    public function __construct($match)
+    public function __construct(string $match)
     {
         $this->match = $match;
     }
