@@ -13,6 +13,9 @@ use Giuffre\Sprint\Error\MalformedType;
  */
 class NamedParameter
 {
+    const PATTERN_NAME = '/\[(\w+)\]/';
+    const PATTERN_TYPE = '/(%)([\w]+)/';
+
     /**
      * @var string
      */
@@ -34,7 +37,7 @@ class NamedParameter
     public function extractName(): string
     {
         $matches = [];
-        preg_match('/\[(\w+)\]/', $this->fromMatch, $matches);
+        preg_match(self::PATTERN_NAME, $this->fromMatch, $matches);
         if (!array_key_exists(1, $matches) || 0 >= count($matches)) {
             throw new MalformedName(
                 sprintf('Could not extract a name from this string: %s', $this->fromMatch)
@@ -51,7 +54,7 @@ class NamedParameter
     public function extractType(): string
     {
         $matches = [];
-        preg_match('/(%)([\w]+)/', $this->fromMatch, $matches);
+        preg_match(self::PATTERN_TYPE, $this->fromMatch, $matches);
         if (!array_key_exists(0, $matches) || 0 >= count($matches)) {
             throw new MalformedType(
                 sprintf('Could not extract a type from this string: %s', $this->fromMatch)
