@@ -13,10 +13,7 @@ use Giuffre\Sprint\Error\NamedParametersMismatch;
  */
 class Transformer implements TransformerInterface
 {
-    /**
-     * @var string
-     */
-    private $pattern = '/(%)([\w]+)\[(\w+)\]/';
+    const PATTERN = '/(%)([\w]+)\[(\w+)\]/';
 
     /**
      * @var NamedValues
@@ -50,7 +47,7 @@ class Transformer implements TransformerInterface
     {
         $namedParameters = [];
         $template = (string)$this->originalTemplate;
-        preg_match_all($this->pattern, $template, $namedParameters);
+        preg_match_all(self::PATTERN, $template, $namedParameters);
 
         $namedParameters = new NamedParameters($namedParameters[0]);
         if ($namedParameters->hasDupes()) {
