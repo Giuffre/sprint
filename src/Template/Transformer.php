@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
-use Giuffre\Sprint\Error\MissingValues;
+use Giuffre\Sprint\Error\MalformedName;
+use Giuffre\Sprint\Error\MalformedType;
 
 /**
  * Class Transformer
@@ -38,7 +39,8 @@ class Transformer implements TransformerInterface
 
     /**
      * @return TransformedObject
-     * @throws MissingValues
+     * @throws MalformedName
+     * @throws MalformedType
      */
     public function transform(): TransformedObject
     {
@@ -49,7 +51,7 @@ class Transformer implements TransformerInterface
         /** @var NamedParameter $namedParameter */
         foreach ($namedParameters as $namedParameter) {
             $template = self::stripParameterNameFromTemplate($template, $namedParameter);
-            $values[] = $this->namedValues->getValue($namedParameter->extractName());
+            $values[] = $this->namedValues->getValue($namedParameter->getName());
         }
 
         return new TransformedObject(
@@ -60,6 +62,8 @@ class Transformer implements TransformerInterface
 
     /**
      * @return NamedParameters
+     * @throws MalformedName
+     * @throws MalformedType
      */
     private function extractNamedParameters(): NamedParameters
     {
@@ -83,7 +87,7 @@ class Transformer implements TransformerInterface
     {
         // This should be quicker than str_replace().
         return implode(
-            $parameter->extractType(),
+            $parameter->getType(),
             explode((string)$parameter, $template)
         );
     }

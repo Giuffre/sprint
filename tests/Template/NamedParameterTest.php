@@ -26,36 +26,34 @@ class NamedParameterTest extends TestCase
         );
     }
 
-    public function testExtractNameSuccess()
+    public function testInvalidNameFailure()
+    {
+        $this->expectException(MalformedName::class);
+
+        new NamedParameter('%s{foo}');
+    }
+
+    public function testInvalidTypeFailure()
+    {
+        $this->expectException(MalformedType::class);
+
+        new NamedParameter('s[foo]');
+    }
+
+    public function testGetName()
     {
         $this->assertEquals(
             self::NAME,
-            $this->parameter->extractName()
+            $this->parameter->getName()
         );
     }
 
-    public function testExtractNameFailure()
-    {
-        $parameter = new NamedParameter('%s{foo}');
-
-        $this->expectException(MalformedName::class);
-        $parameter->extractName();
-    }
-
-    public function testExtractTypeSuccess()
+    public function testGetType()
     {
         $this->assertEquals(
             self::TYPE,
-            $this->parameter->extractType()
+            $this->parameter->getType()
         );
-    }
-
-    public function testExtractTypeFailure()
-    {
-        $parameter = new NamedParameter('s[foo]');
-
-        $this->expectException(MalformedType::class);
-        $parameter->extractType();
     }
 
     public function testToString()

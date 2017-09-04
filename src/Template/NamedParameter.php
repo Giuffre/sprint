@@ -21,42 +21,42 @@ class NamedParameter
     private $match;
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * NamedParameter constructor.
      * @param string $match
+     * @throws MalformedName
+     * @throws MalformedType
      */
     public function __construct(string $match)
     {
         $this->match = $match;
+        $this->extractName();
+        $this->extractType();
     }
 
     /**
      * @return string
-     * @throws MalformedName
      */
-    public function extractName(): string
+    public function getName(): string
     {
-        $matches = [];
-        preg_match(self::PATTERN_NAME, $this->match, $matches);
-        if (!array_key_exists(1, $matches) || 0 >= count($matches)) {
-            throw MalformedName::fromMatch($this->match);
-        }
-
-        return $matches[1];
+        return $this->name;
     }
 
     /**
      * @return string
-     * @throws MalformedType
      */
-    public function extractType(): string
+    public function getType(): string
     {
-        $matches = [];
-        preg_match(self::PATTERN_TYPE, $this->match, $matches);
-        if (!array_key_exists(0, $matches) || 0 >= count($matches)) {
-            throw MalformedType::fromMatch($this->match);
-        }
-
-        return $matches[0];
+        return $this->type;
     }
 
     /**
@@ -65,5 +65,33 @@ class NamedParameter
     public function __toString(): string
     {
         return $this->match;
+    }
+
+    /**
+     * @throws MalformedName
+     */
+    private function extractName()
+    {
+        $matches = [];
+        preg_match(self::PATTERN_NAME, $this->match, $matches);
+        if (!array_key_exists(1, $matches) || 0 >= count($matches)) {
+            throw MalformedName::fromMatch($this->match);
+        }
+
+        $this->name = $matches[1];
+    }
+
+    /**
+     * @throws MalformedType
+     */
+    private function extractType()
+    {
+        $matches = [];
+        preg_match(self::PATTERN_TYPE, $this->match, $matches);
+        if (!array_key_exists(0, $matches) || 0 >= count($matches)) {
+            throw MalformedType::fromMatch($this->match);
+        }
+
+        $this->type = $matches[0];
     }
 }
