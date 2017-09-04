@@ -39,7 +39,7 @@ class NamedParameter
         preg_match(self::PATTERN_NAME, $this->fromMatch, $matches);
         if (!array_key_exists(1, $matches) || 0 >= count($matches)) {
             throw new MalformedName(
-                sprintf('Could not extract a name from this string: %s', $this->fromMatch)
+                sprintf('Cannot extract parameter name from match: %s', $this->fromMatch)
             );
         }
 
@@ -56,7 +56,7 @@ class NamedParameter
         preg_match(self::PATTERN_TYPE, $this->fromMatch, $matches);
         if (!array_key_exists(0, $matches) || 0 >= count($matches)) {
             throw new MalformedType(
-                sprintf('Could not extract a type from this string: %s', $this->fromMatch)
+                sprintf('Cannot extract parameter type from match: %s', $this->fromMatch)
             );
         }
 
