@@ -14,24 +14,10 @@ class TransformerTest extends TestCase
 {
     use MokaCleanerTrait;
 
-    public function testConstructorSuccess()
+    public function testConstruct()
     {
         $transformer = new Transformer(
-            moka(Template::class)->stub([
-                '__toString' => 'Apples are %s[color] and taste %s[how]'
-            ]),
-            moka(NamedValues::class)
-        );
-
-        $this->assertInstanceOf(Transformer::class, $transformer);
-    }
-
-    public function testConstructorFailure()
-    {
-        $transformer = new Transformer(
-            moka(Template::class)->stub([
-                '__toString' => 'Apples are %s[color] and taste %s[how]'
-            ]),
+            moka(Template::class),
             moka(NamedValues::class)
         );
 
