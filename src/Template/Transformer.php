@@ -13,10 +13,8 @@ use Giuffre\Sprint\Error\MissingValues;
  */
 class Transformer implements TransformerInterface
 {
-    const PATTERN = '/%[\w]+\[\w+\]/';
-
     /**
-     * @var string
+     * @var Template
      */
     private $originalTemplate;
 
@@ -24,6 +22,11 @@ class Transformer implements TransformerInterface
      * @var NamedValues
      */
     private $namedValues;
+
+    /**
+     * @var TransformerHelper
+     */
+    private $transformerHelper;
 
     /**
      * Transformer constructor.
@@ -36,6 +39,7 @@ class Transformer implements TransformerInterface
     ) {
         $this->originalTemplate = $originalTemplate;
         $this->namedValues = $namedValues;
+        $this->transformerHelper = new TransformerHelper($originalTemplate);
     }
 
     /**
@@ -47,12 +51,12 @@ class Transformer implements TransformerInterface
     public function __invoke(): TransformedObject
     {
         /** @var NamedParameter[] $namedParameters */
-        $namedParameters = $this->extractNamedParameters();
+        $namedParameters = $this->transformerHelper->extractNamedParameters();
 
         $template = (string)$this->originalTemplate;
         $values = [];
         foreach ($namedParameters as $namedParameter) {
-            $template = self::stripParameterNameFromTemplate($template, $namedParameter);
+            $template = $this->transformerHelper->stripParameterNameFromTemplate($template, $namedParameter);
             $values[] = $this->namedValues->getValue($namedParameter->getName());
         }
 
@@ -62,35 +66,4 @@ class Transformer implements TransformerInterface
         );
     }
 
-    /**
-     * @return NamedParameters
-     * @throws MalformedName
-     * @throws MalformedType
-     */
-    private function extractNamedParameters(): NamedParameters
-    {
-        $parameters = [];
-
-        preg_match_all(
-            self::PATTERN,
-            (string)$this->originalTemplate,
-            $parameters
-        );
-
-        return new NamedParameters($parameters[0]);
-    }
-
-    /**
-     * @param string $template
-     * @param NamedParameter $parameter
-     * @return string
-     */
-    private static function stripParameterNameFromTemplate(string $template, NamedParameter $parameter): string
-    {
-        // This should be quicker than str_replace().
-        return implode(
-            $parameter->getType(),
-            explode((string)$parameter, $template)
-        );
-    }
 }
