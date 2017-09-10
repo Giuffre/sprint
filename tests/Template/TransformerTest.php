@@ -45,7 +45,7 @@ class TransformerTest extends TestCase
 
     public function testTransform()
     {
-        $result = $this->transformer->transform();
+        $result = ($this->transformer)();
 
         $this->assertInstanceOf(TransformedObject::class, $result);
 

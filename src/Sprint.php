@@ -8,6 +8,7 @@ use Giuffre\Sprint\Error\MalformedType;
 use Giuffre\Sprint\Error\MissingValues;
 use Giuffre\Sprint\Template\NamedValues;
 use Giuffre\Sprint\Template\Template;
+use Giuffre\Sprint\Template\TransformedObject;
 use Giuffre\Sprint\Template\Transformer;
 
 /**
@@ -26,10 +27,11 @@ class Sprint
      */
     public static function sprint(string $template, array ...$namedValues): string
     {
+        /** @var TransformedObject $transformedObject */
         $transformedObject = (new Transformer(
             new Template($template),
             new NamedValues($namedValues)
-        ))->transform();
+        ))();
 
         return sprintf(
             (string)$transformedObject->getTemplate(),

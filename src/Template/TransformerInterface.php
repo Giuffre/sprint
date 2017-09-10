@@ -15,5 +15,5 @@ interface TransformerInterface
      * @return TransformedObject
      * @throws MissingValues
      */
-    public function transform(): TransformedObject;
+    public function __invoke(): TransformedObject;
 }

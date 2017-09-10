@@ -5,6 +5,7 @@ namespace Giuffre\Sprint\Template;
 
 use Giuffre\Sprint\Error\MalformedName;
 use Giuffre\Sprint\Error\MalformedType;
+use Giuffre\Sprint\Error\MissingValues;
 
 /**
  * Class Transformer
@@ -41,14 +42,15 @@ class Transformer implements TransformerInterface
      * @return TransformedObject
      * @throws MalformedName
      * @throws MalformedType
+     * @throws MissingValues
      */
-    public function transform(): TransformedObject
+    public function __invoke(): TransformedObject
     {
+        /** @var NamedParameter[] $namedParameters */
         $namedParameters = $this->extractNamedParameters();
 
         $template = (string)$this->originalTemplate;
         $values = [];
-        /** @var NamedParameter $namedParameter */
         foreach ($namedParameters as $namedParameter) {
             $template = self::stripParameterNameFromTemplate($template, $namedParameter);
             $values[] = $this->namedValues->getValue($namedParameter->getName());
