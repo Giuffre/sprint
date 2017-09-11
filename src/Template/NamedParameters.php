@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
+use Giuffre\Sprint\Error\MalformedName;
+use Giuffre\Sprint\Error\MalformedType;
+
 /**
  * Class NamedParameters
  * @package Giuffre\Sprint\Template
@@ -10,32 +13,18 @@ namespace Giuffre\Sprint\Template;
 class NamedParameters extends \ArrayObject
 {
     /**
-     * @var NamedParameter[]
-     */
-    private $namedParameters = [];
-
-    /**
      * NamedParameters constructor.
-     * @param array $namedParameters
+     * @param array $parameters
+     * @throws MalformedName
+     * @throws MalformedType
      */
-    public function __construct(array $namedParameters)
+    public function __construct(array $parameters)
     {
-        foreach ($namedParameters as $namedParameter) {
-            $this->namedParameters[] = new NamedParameter($namedParameter);
+        $namedParameters = [];
+        foreach ($parameters as $parameter) {
+            $namedParameters[] = new NamedParameter($parameter);
         }
 
-        parent::__construct($this->namedParameters);
-    }
-
-    /**
-     * @return int
-     */
-    public function parameterCount(): int
-    {
-        $names = array_map(function (NamedParameter $parameter) {
-            return $parameter->extractName();
-        }, $this->namedParameters);
-
-        return count(array_unique($names));
+        parent::__construct($namedParameters);
     }
 }

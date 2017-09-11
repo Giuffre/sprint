@@ -12,55 +12,51 @@ use Giuffre\Sprint\Error\MalformedType;
  */
 class NamedParameter
 {
-    const PATTERN_NAME = '/\[(\w+)\]/';
-    const PATTERN_TYPE = '/%[\w]+/';
+    const PATTERN_NAME = '/\[(\w+)\]$/';
+    const PATTERN_TYPE = '/^%\w+/';
 
     /**
      * @var string
      */
-    private $fromMatch;
+    private $match;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
+     * @var string
+     */
+    private $type;
 
     /**
      * NamedParameter constructor.
-     * @param string $fromMatch
-     */
-    public function __construct($fromMatch)
-    {
-        $this->fromMatch = $fromMatch;
-    }
-
-    /**
-     * @return string
+     * @param string $match
      * @throws MalformedName
-     */
-    public function extractName(): string
-    {
-        $matches = [];
-        preg_match(self::PATTERN_NAME, $this->fromMatch, $matches);
-        if (!array_key_exists(1, $matches) || 0 >= count($matches)) {
-            throw new MalformedName(
-                sprintf('Cannot extract parameter name from match: %s', $this->fromMatch)
-            );
-        }
-
-        return $matches[1];
-    }
-
-    /**
-     * @return string
      * @throws MalformedType
      */
-    public function extractType(): string
+    public function __construct(string $match)
     {
-        $matches = [];
-        preg_match(self::PATTERN_TYPE, $this->fromMatch, $matches);
-        if (!array_key_exists(0, $matches) || 0 >= count($matches)) {
-            throw new MalformedType(
-                sprintf('Cannot extract parameter type from match: %s', $this->fromMatch)
-            );
-        }
+        $this->match = $match;
+        $this->extractName();
+        $this->extractType();
+    }
 
-        return $matches[0];
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     /**
@@ -68,6 +64,34 @@ class NamedParameter
      */
     public function __toString(): string
     {
-        return $this->fromMatch;
+        return $this->match;
+    }
+
+    /**
+     * @throws MalformedName
+     */
+    private function extractName()
+    {
+        $matches = [];
+        preg_match(self::PATTERN_NAME, $this->match, $matches);
+        if (!array_key_exists(1, $matches) || 0 >= count($matches)) {
+            throw MalformedName::fromMatch($this->match);
+        }
+
+        $this->name = $matches[1];
+    }
+
+    /**
+     * @throws MalformedType
+     */
+    private function extractType()
+    {
+        $matches = [];
+        preg_match(self::PATTERN_TYPE, $this->match, $matches);
+        if (!array_key_exists(0, $matches) || 0 >= count($matches)) {
+            throw MalformedType::fromMatch($this->match);
+        }
+
+        $this->type = $matches[0];
     }
 }

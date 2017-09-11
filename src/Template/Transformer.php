@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
-use Giuffre\Sprint\Error\NamedParametersMismatch;
+use Giuffre\Sprint\Error\MalformedName;
+use Giuffre\Sprint\Error\MalformedType;
+use Giuffre\Sprint\Error\MissingValues;
 
 /**
  * Class Transformer
@@ -11,7 +13,10 @@ use Giuffre\Sprint\Error\NamedParametersMismatch;
  */
 class Transformer implements TransformerInterface
 {
-    const PATTERN = '/%[\w]+\[\w+\]/';
+    /**
+     * @var Template
+     */
+    private $originalTemplate;
 
     /**
      * @var NamedValues
@@ -19,9 +24,9 @@ class Transformer implements TransformerInterface
     private $namedValues;
 
     /**
-     * @var string
+     * @var TransformerHelper
      */
-    private $originalTemplate;
+    private $transformerHelper;
 
     /**
      * Transformer constructor.
@@ -34,32 +39,25 @@ class Transformer implements TransformerInterface
     ) {
         $this->originalTemplate = $originalTemplate;
         $this->namedValues = $namedValues;
+        $this->transformerHelper = new TransformerHelper($originalTemplate);
     }
 
     /**
      * @return TransformedObject
-     * @throws NamedParametersMismatch
+     * @throws MalformedName
+     * @throws MalformedType
+     * @throws MissingValues
      */
-    public function transform(): TransformedObject
+    public function __invoke(): TransformedObject
     {
-        $namedParameters = [];
+        /** @var NamedParameter[] $namedParameters */
+        $namedParameters = $this->transformerHelper->extractNamedParameters();
+
         $template = (string)$this->originalTemplate;
-        preg_match_all(self::PATTERN, $template, $namedParameters);
-
-        $namedParameters = new NamedParameters($namedParameters[0]);
-        if ($namedParameters->parameterCount() !== $this->namedValues->valueCount()) {
-            throw new NamedParametersMismatch('Placeholders and values count must be the same');
-        }
-
         $values = [];
-        foreach ($namedParameters as $match) {
-            $values[] = $this->getValue($match->extractName());
-
-            $template = str_replace(
-                (string)$match,
-                $match->extractType(),
-                $template
-            );
+        foreach ($namedParameters as $namedParameter) {
+            $template = $this->transformerHelper->stripParameterNameFromTemplate($template, $namedParameter);
+            $values[] = $this->namedValues->getValue($namedParameter->getName());
         }
 
         return new TransformedObject(
@@ -68,12 +66,4 @@ class Transformer implements TransformerInterface
         );
     }
 
-    /**
-     * @param string $name
-     * @return mixed
-     */
-    private function getValue(string $name)
-    {
-        return $this->namedValues[$name];
-    }
 }

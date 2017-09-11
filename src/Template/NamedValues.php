@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Giuffre\Sprint\Template;
 
+use Giuffre\Sprint\Error\MissingValues;
+
 /**
  * Class NamedValues
  * @package Giuffre\Sprint\Template
@@ -11,25 +13,31 @@ class NamedValues extends \ArrayObject
 {
     /**
      * NamedValues constructor.
-     * @param array $namedValues
+     * @param array $valueMaps
      */
-    public function __construct($namedValues = [])
+    public function __construct($valueMaps)
     {
-        $formattedNamedValues = [];
-        foreach ($namedValues as $values) {
+        $namedValues = [];
+        foreach ($valueMaps as $values) {
             foreach ($values as $name => $value) {
-                $formattedNamedValues[$name] = $value;
+                $namedValues[$name] = $value;
             }
         }
 
-        parent::__construct($formattedNamedValues);
+        parent::__construct($namedValues);
     }
 
     /**
-     * @return int
+     * @param string $name
+     * @return mixed
+     * @throws MissingValues
      */
-    public function valueCount(): int
+    public function getValue(string $name)
     {
-        return $this->count();
+        if (!array_key_exists($name, $this)) {
+            throw MissingValues::forParameters($name);
+        }
+
+        return $this[$name];
     }
 }

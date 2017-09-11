@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Giuffre\Sprint\Error\MissingValues;
 use Giuffre\Sprint\Sprint;
 use PHPUnit\Framework\TestCase;
 
@@ -85,6 +86,29 @@ class SprintTest extends TestCase
 
         $this->assertEquals(
             'Le mele sono buone e di colore rosso',
+            $result
+        );
+    }
+
+    public function testSprintWithMismatchedParameters()
+    {
+        $this->expectException(MissingValues::class);
+
+        Sprint::sprint(
+            'Le mele sono %s[come] e di colore %s[colore]',
+            ['colore' => 'verde', 'quantita' => 'tante']
+        );
+    }
+
+    public function testSprintWithUselessValues()
+    {
+        $result = Sprint::sprint(
+            'Le mele sono %s[come] e di colore %s[colore]',
+            ['colore' => 'verde', 'come' => 'buone', 'quantita' => 'tante']
+        );
+
+        $this->assertEquals(
+            'Le mele sono buone e di colore verde',
             $result
         );
     }
