@@ -25,7 +25,7 @@
             <directory>src</directory>
             <exclude>
                 <directory>src/Error</directory>
-                <directory suffix="sprint.php">src/Resources/functions/*</directory>
+                <directory>src/Resources</directory>
             </exclude>
         </whitelist>
     </filter>
