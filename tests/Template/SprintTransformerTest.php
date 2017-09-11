@@ -7,28 +7,27 @@ use Giuffre\Sprint\Template\NamedValues;
 use Giuffre\Sprint\Template\Template;
 use Giuffre\Sprint\Template\TransformedObject;
 use Giuffre\Sprint\Template\Transformer;
+use Giuffre\Sprint\Template\Transformer\SprintTransformer;
 use Moka\Traits\MokaCleanerTrait;
 use PHPUnit\Framework\TestCase;
 use function Moka\Plugin\PHPUnit\moka;
 
-class TransformerTest extends TestCase
+class SprintTransformerTest extends TestCase
 {
     use MokaCleanerTrait;
-
     /**
-     * @var Transformer
+     * @var Transformer\TransformerInterface
      */
     private $transformer;
 
     protected function setUp()
     {
-        $this->transformer = new Transformer(
+        $this->transformer = new SprintTransformer(
             moka(Template::class)->stub([
                 '__toString' => 'one %s[tic] three %s[tac] five'
             ]),
             moka(NamedValues::class, 'values')
         );
-
         moka('values')
             ->method('getValue')
             ->willReturnMap([
@@ -40,23 +39,22 @@ class TransformerTest extends TestCase
 
     public function testConstruct()
     {
-        $this->assertInstanceOf(Transformer::class, $this->transformer);
+        $this->assertInstanceOf(SprintTransformer::class, $this->transformer);
     }
 
     public function testTransform()
     {
+        /** @var TransformedObject $result */
         $result = ($this->transformer)();
-
         $this->assertInstanceOf(TransformedObject::class, $result);
-
         $this->assertCount(2, $result->getValues());
         $this->assertEquals([
             'two', 'four'
         ], $result->getValues());
-
         $this->assertEquals(
             'one %s three %s five',
             $result->getTemplate()
         );
     }
+
 }

@@ -1,47 +1,21 @@
 <?php
 declare(strict_types=1);
 
-namespace Giuffre\Sprint\Template;
+namespace Giuffre\Sprint\Template\Transformer;
 
 use Giuffre\Sprint\Error\MalformedName;
 use Giuffre\Sprint\Error\MalformedType;
 use Giuffre\Sprint\Error\MissingValues;
+use Giuffre\Sprint\Template\NamedParameter;
+use Giuffre\Sprint\Template\Template;
+use Giuffre\Sprint\Template\TransformedObject;
 
 /**
  * Class Transformer
  * @package Giuffre\Sprint\Template
  */
-class Transformer implements TransformerInterface
+class SprintTransformer extends AbstractTransformer
 {
-    /**
-     * @var Template
-     */
-    private $originalTemplate;
-
-    /**
-     * @var NamedValues
-     */
-    private $namedValues;
-
-    /**
-     * @var TransformerHelper
-     */
-    private $transformerHelper;
-
-    /**
-     * Transformer constructor.
-     * @param Template $originalTemplate
-     * @param NamedValues $namedValues
-     */
-    public function __construct(
-        Template $originalTemplate,
-        NamedValues $namedValues
-    ) {
-        $this->originalTemplate = $originalTemplate;
-        $this->namedValues = $namedValues;
-        $this->transformerHelper = new TransformerHelper($originalTemplate);
-    }
-
     /**
      * @return TransformedObject
      * @throws MalformedName

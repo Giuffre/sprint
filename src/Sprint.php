@@ -9,7 +9,8 @@ use Giuffre\Sprint\Error\MissingValues;
 use Giuffre\Sprint\Template\NamedValues;
 use Giuffre\Sprint\Template\Template;
 use Giuffre\Sprint\Template\TransformedObject;
-use Giuffre\Sprint\Template\Transformer;
+use Giuffre\Sprint\Template\Transformer\SprintTransformer;
+use Giuffre\Sprint\Template\Transformer\TransformerInterface;
 
 /**
  * Class Sprint
@@ -28,14 +29,25 @@ class Sprint
     public static function sprint(string $template, array ...$namedValues): string
     {
         /** @var TransformedObject $transformedObject */
-        $transformedObject = (new Transformer(
-            new Template($template),
-            new NamedValues($namedValues)
-        ))();
+        $transformedObject = self::getTransformer($template, $namedValues)();
 
         return sprintf(
             (string)$transformedObject->getTemplate(),
             ...$transformedObject->getValues()
+        );
+    }
+
+    /**
+     * @param string $template
+     * @param array $namedValues
+     * @return TransformerInterface
+     */
+    private static function getTransformer(string $template, array $namedValues): TransformerInterface
+    {
+        // TODO based on a regex instantiate the correct Transfomer
+        return new SprintTransformer(
+            new Template($template),
+            new NamedValues($namedValues)
         );
     }
 }
